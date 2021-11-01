@@ -19,25 +19,25 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 
+BIN_DIR=$(cd "$(dirname "$0")"; pwd) # absolute path
+ROOT_DIR=$(dirname "$BIN_DIR")
+SCRIPTS_DIR="$ROOT_DIR/scripts"
+IMEI_SCRIPT="$SCRIPTS_DIR/imei.sh"
+
 VENDOR_DIR="$BUILD_DIR/vendor"
 INSTALL_DIR="$VENDOR_DIR/imagemagick"
 CONFIG_DIR="$INSTALL_DIR/etc/ImageMagick"
 
 IMAGE_MAGICK_VERSION="${IMAGE_MAGICK_VERSION:-7.1.0-13}"
 
-topic "Downloading imei.sh"
+source "$IMEI_SCRIPT" --build-dir="$BUILD_DIR" --config-dir="$CONFIG_DIR" --work-dir="$BUILD_DIR"
 
-wget "https://dist.1-2.dev/imei.sh" -P $BUILD_DIR
-
-if [ ! -f "$BUILD_DIR/imei.sh" ]; then
-  echo "Error: Unable to download IMEI"
-  ls $BUILD_DIR
-  exit 1;
+topic "Sanity Check"
+if [ ! -f "$INSTALL_DIR/identity" ]; then
+ echo "Error: ImageMagick not installed" | indent
+ ls $BUILD_DIR | indent
+ exit 1;
 fi
-
-cd $BUILD_DIR
-
-source "$BUILD_DIR/imei.sh" --build-dir=$BUILD_DIR --config-dir=$CONFIG_DIR --work-dir=$BUILD_DIR
 
 # update PATH and LD_LIBRARY_PATH
 topic "Updating environment variables"
