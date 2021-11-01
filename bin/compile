@@ -1,0 +1,51 @@
+#!/bin/bash
+
+function error() {
+  echo " !     $*" >&2
+  exit 1
+}
+
+function topic() {
+  echo "-----> $*"
+}
+
+indent() {
+  sed -u 's/^/       /'
+}
+
+topic "Install ImageMagick"
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+
+VENDOR_DIR="$BUILD_DIR/vendor"
+INSTALL_DIR="$VENDOR_DIR/imagemagick"
+CONFIG_DIR="$INSTALL_DIR/etc/ImageMagick"
+
+IMAGE_MAGICK_VERSION="${IMAGE_MAGICK_VERSION:-7.1.0-13}"
+
+topic "Downloading imei.sh"
+
+wget "https://dist.1-2.dev/imei.sh" -P $BUILD_DIR
+
+if [ ! -f "$BUILD_DIR/imei.sh" ]; then
+  echo "Error: Unable to download IMEI"
+  ls $BUILD_DIR
+  exit 1;
+fi
+
+cd $BUILD_DIR
+
+./imei.sh --build-dir=$BUILD_DIR --config-dir=$CONFIG_DIR --work-dir=$BUILD_DIR
+
+# update PATH and LD_LIBRARY_PATH
+topic "Updating environment variables"
+PROFILE_PATH="$BUILD_DIR/.profile.d/imagemagick.sh"
+ACTUAL_INSTALL_PATH="$HOME/vendor/imagemagick"
+mkdir -p $(dirname $PROFILE_PATH)
+echo "export PATH=$ACTUAL_INSTALL_PATH/bin:\$PATH" >> $PROFILE_PATH
+echo "export LD_LIBRARY_PATH=$ACTUAL_INSTALL_PATH/lib:\$LD_LIBRARY_PATH:/usr/local/lib" >> $PROFILE_PATH
+echo "export MAGICK_CONFIGURE_PATH=$ACTUAL_INSTALL_PATH" >> $PROFILE_PATH
+
+topic "Done updating environment variables. All set for ImageMagick."
