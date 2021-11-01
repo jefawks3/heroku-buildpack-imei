@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 ##############################################################
 # Title          : IMEI - ImageMagick Easy Install           #
