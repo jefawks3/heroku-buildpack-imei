@@ -37,9 +37,7 @@ fi
 
 cd $BUILD_DIR
 
-sudo chmod +x imei.sh
-
-./imei.sh --build-dir=$BUILD_DIR --config-dir=$CONFIG_DIR --work-dir=$BUILD_DIR
+source "$BUILD_DIR/imei.sh" --build-dir=$BUILD_DIR --config-dir=$CONFIG_DIR --work-dir=$BUILD_DIR
 
 # update PATH and LD_LIBRARY_PATH
 topic "Updating environment variables"
