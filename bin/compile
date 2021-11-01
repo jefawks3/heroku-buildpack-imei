@@ -29,8 +29,8 @@ CONFIG_DIR="$INSTALL_DIR/etc/ImageMagick"
 
 IMAGE_MAGICK_VERSION="${IMAGE_MAGICK_VERSION:-7.1.0-13}"
 
-echo "$IMEI_SCRIPT --imagemagick-version=$IMAGE_MAGICK_VERSION --build-dir=$BUILD_DIR --config-dir=$CONFIG_DIR --work-dir=$BUILD_DIR"
-source "$IMEI_SCRIPT" --imagemagick-version=$IMAGE_MAGICK_VERSION --build-dir="$BUILD_DIR" --config-dir="$CONFIG_DIR" --work-dir="$BUILD_DIR"
+echo "$IMEI_SCRIPT --imagemagick-version=$IMAGE_MAGICK_VERSION --build-dir $BUILD_DIR --config-dir $CONFIG_DIR --work-dir $BUILD_DIR"
+source "$IMEI_SCRIPT" --imagemagick-version $IMAGE_MAGICK_VERSION --build-dir "$BUILD_DIR" --config-dir "$CONFIG_DIR" --work-dir "$BUILD_DIR"
 
 topic "Sanity Check"
 if [ ! -f "$INSTALL_DIR/identity" ]; then
